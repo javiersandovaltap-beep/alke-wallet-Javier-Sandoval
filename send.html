@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alke Wallet - Enviar Dinero</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background-color: #f9fafb;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: white !important;
+        }
+
+        .navbar-brand i {
+            margin-right: 8px;
+        }
+
+        .user-info {
+            color: white;
+            font-size: 0.9rem;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+        }
+
+        .container-form {
+            min-height: calc(100vh - 60px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 20px;
+        }
+
+        .form-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e5e7eb;
+            padding: 40px;
+            width: 100%;
+            max-width: 600px;
+            animation: slideDown 0.5s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-card h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #212529;
+            margin-bottom: 10px;
+        }
+
+        .form-card p {
+            color: #6b7280;
+            font-size: 0.95rem;
+            margin-bottom: 30px;
+        }
+
+        .balance-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .balance-box .label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+
+        .balance-box .amount {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .tabs-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        .tab-btn {
+            padding: 12px 20px;
+            background: transparent;
+            border: none;
+            color: #6b7280;
+            font-weight: 600;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .tab-btn.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .tab-btn:hover {
+            color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #374151;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            background-color: #f9fafb;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            background-color: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .contacts-list {
+            background-color: #f9fafb;
+            border-radius: 10px;
+            padding: 0;
+            margin-bottom: 20px;
+            border: 1px solid #e5e7eb;
+            max-height: 250px;
+            overflow-y: auto;
+        }
+
+        .contact-item {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e5e7eb;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: space-between;
+        }
+
+        .contact-item:last-child {
+            border-bottom: none;
+        }
+
+        .contact-item:hover {
+            background-color: #f0f1ff;
+            padding-left: 20px;
+        }
+
+        .contact-info-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+        }
+
+        .contact-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+
+        .contact-info {
+            flex: 1;
+        }
+
+        .contact-info h6 {
+            margin: 0;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #212529;
+        }
+
+        .contact-info p {
+            margin: 0;
+            font-size: 0.8rem;
+            color: #6b7280;
+        }
+
+        .contact-actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .contact-btn {
+            padding: 6px 10px;
+            border: none;
+            border-radius: 6px;
+            background: transparent;
+            cursor: pointer;
+            color: #667eea;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .contact-btn:hover {
+            background-color: #f0f1ff;
+        }
+
+        .contact-btn.delete {
+            color: #ef4444;
+        }
+
+        .contact-btn.delete:hover {
+            background-color: #fee2e2;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            gap: 12px;
+            color: #764ba2;
+        }
+
+        .alert-custom {
+            padding: 12px 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .alert-custom.show {
+            display: block;
+        }
+
+        .alert-custom.success {
+            background-color: #d1fae5;
+            border: 2px solid #10b981;
+            color: #065f46;
+        }
+
+        .alert-custom.error {
+            background-color: #fee2e2;
+            border: 2px solid #ef4444;
+            color: #7f1d1d;
+        }
+
+        .empty-contacts {
+            text-align: center;
+            padding: 30px 20px;
+            color: #6b7280;
+        }
+
+        .empty-contacts i {
+            font-size: 2rem;
+            opacity: 0.5;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn-secondary {
+            flex: 1;
+            padding: 10px;
+            background-color: #f3f4f6;
+            color: #374151;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background-color: #e5e7eb;
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        .success-icon {
+            font-size: 3rem;
+            color: #10b981;
+            margin-bottom: 10px;
+        }
+
+        .success-text {
+            color: #065f46;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .badge-count {
+            display: inline-block;
+            background: #10b981;
+            color: white;
+            border-radius: 12px;
+            padding: 2px 8px;
+            font-size: 0.8rem;
+            margin-left: 8px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="menu.html">
+                <i class="fas fa-wallet"></i> Alke Wallet
+            </a>
+            <div class="ms-auto d-flex align-items-center gap-3">
+                <div class="user-info">
+                    <span id="navUserName">Usuario</span>
+                </div>
+                <div class="avatar" id="navUserAvatar">U</div>
+                <button class="btn btn-light btn-sm" onclick="logout()" title="Cerrar sesión">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-form">
+        <div class="form-card">
+            <a href="menu.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i> Volver
+            </a>
+
+            <h1><i class="fas fa-paper-plane" style="color: #667eea; margin-right: 10px;"></i> Enviar Dinero</h1>
+            <p>Transfiere dinero a tus contactos</p>
+
+            <div class="balance-box">
+                <div class="label">Saldo Disponible</div>
+                <div class="amount">$<span id="balanceAmount">0.00</span></div>
+            </div>
+
+            <div class="alert-custom" id="alertMessage"></div>
+
+            <!-- Tabs -->
+            <div class="tabs-container">
+                <button class="tab-btn active" onclick="switchTab('send')">
+                    <i class="fas fa-paper-plane"></i> Enviar
+                </button>
+                <button class="tab-btn" onclick="switchTab('contacts')">
+                    <i class="fas fa-address-book"></i> Mis Contactos <span class="badge-count" id="contactCount">0</span>
+                </button>
+                <button class="tab-btn" onclick="switchTab('addContact')">
+                    <i class="fas fa-user-plus"></i> Agregar Contacto
+                </button>
+            </div>
+
+            <!-- Tab: Enviar Dinero -->
+            <div id="send" class="tab-content active">
+                <form id="sendForm">
+                    <div class="form-group">
+                        <label for="recipient">Selecciona un Contacto</label>
+                        <div class="contacts-list" id="contactsList"></div>
+                        <input 
+                            type="text" 
+                            id="recipient" 
+                            name="recipient" 
+                            placeholder="O ingresa email del contacto" 
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="amount">Monto a Enviar</label>
+                        <input 
+                            type="number" 
+                            id="amount" 
+                            name="amount" 
+                            placeholder="0.00" 
+                            step="0.01"
+                            min="1"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">Descripción (Opcional)</label>
+                        <input 
+                            type="text" 
+                            id="description" 
+                            name="description" 
+                            placeholder="Ej: Pago de almuerzo" 
+                        >
+                    </div>
+
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-check-circle"></i> Confirmar Envío
+                    </button>
+                </form>
+            </div>
+
+            <!-- Tab: Mis Contactos -->
+            <div id="contacts" class="tab-content">
+                <div id="myContacts"></div>
+            </div>
+
+            <!-- Tab: Agregar Contacto -->
+            <div id="addContact" class="tab-content">
+                <form id="addContactForm">
+                    <div class="form-group">
+                        <label for="newContactName">Nombre del Contacto</label>
+                        <input 
+                            type="text" 
+                            id="newContactName" 
+                            name="newContactName" 
+                            placeholder="Ej: Juan García" 
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="newContactEmail">Email</label>
+                        <input 
+                            type="email" 
+                            id="newContactEmail" 
+                            name="newContactEmail" 
+                            placeholder="Ej: juan@ejemplo.com" 
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="newContactPhone">Teléfono (Opcional)</label>
+                        <input 
+                            type="tel" 
+                            id="newContactPhone" 
+                            name="newContactPhone" 
+                            placeholder="Ej: +56912345678" 
+                        >
+                    </div>
+
+                    <div class="btn-row">
+                        <button type="submit" class="submit-btn" style="margin-top: 0;">
+                            <i class="fas fa-plus-circle"></i> Agregar Contacto
+                        </button>
+                    </div>
+                </form>
+
+                <div class="success-message" id="successMessage">
+                    <div class="success-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="success-text">¡Contacto agregado exitosamente!</div>
+                    <p style="color: #6b7280; font-size: 0.9rem;">El contacto está disponible en Mis Contactos</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Contactos predefinidos
+        const DEFAULT_CONTACTS = [
+            { name: 'Carlos Reyes', email: 'carlos.reyes@email.com', phone: '+56912345678' },
+            { name: 'María García', email: 'maria.garcia@email.com', phone: '+56987654321' },
+            { name: 'Juan Pérez', email: 'juan.perez@email.com', phone: '+56923456789' },
+            { name: 'Laura Martínez', email: 'laura.martinez@email.com', phone: '+56934567890' },
+            { name: 'Diego López', email: 'diego.lopez@email.com', phone: '+56945678901' }
+        ];
+
+        // Inicializar contactos desde localStorage
+        function initializeContacts() {
+            const savedContacts = localStorage.getItem('userContacts');
+            if (!savedContacts) {
+                localStorage.setItem('userContacts', JSON.stringify(DEFAULT_CONTACTS));
+            }
+        }
+
+        function getContacts() {
+            return JSON.parse(localStorage.getItem('userContacts')) || DEFAULT_CONTACTS;
+        }
+
+        function saveContacts(contacts) {
+            localStorage.setItem('userContacts', JSON.stringify(contacts));
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeContacts();
+            checkLogin();
+            loadBalance();
+            loadContacts();
+            updateContactCount();
+
+            const sendForm = document.getElementById('sendForm');
+            sendForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                processSend();
+            });
+
+            const addContactForm = document.getElementById('addContactForm');
+            addContactForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                addNewContact();
+            });
+        });
+
+        function loadContacts() {
+            const contacts = getContacts();
+            const contactsList = document.getElementById('contactsList');
+            const myContacts = document.getElementById('myContacts');
+
+            if (contacts.length === 0) {
+                contactsList.innerHTML = `
+                    <div class="empty-contacts">
+                        <i class="fas fa-users"></i>
+                        <p>No hay contactos agregados</p>
+                    </div>
+                `;
+                myContacts.innerHTML = `
+                    <div class="empty-contacts">
+                        <i class="fas fa-users"></i>
+                        <p>No hay contactos agregados</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Lista para enviar
+            contactsList.innerHTML = contacts.map(contact => {
+                const firstLetter = contact.name.charAt(0).toUpperCase();
+                return `
+                    <div class="contact-item" onclick="selectContact('${contact.email.replace(/'/g, "\\'")}', '${contact.name.replace(/'/g, "\\'")}')">
+                        <div class="contact-info-wrapper">
+                            <div class="contact-avatar">${firstLetter}</div>
+                            <div class="contact-info">
+                                <h6>${contact.name}</h6>
+                                <p>${contact.email}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // Lista de mis contactos
+            myContacts.innerHTML = contacts.map((contact, index) => {
+                const firstLetter = contact.name.charAt(0).toUpperCase();
+                return `
+                    <div class="contact-item">
+                        <div class="contact-info-wrapper" onclick="selectContact('${contact.email.replace(/'/g, "\\'")}', '${contact.name.replace(/'/g, "\\'")}')">
+                            <div class="contact-avatar">${firstLetter}</div>
+                            <div class="contact-info">
+                                <h6>${contact.name}</h6>
+                                <p>${contact.email}</p>
+                                ${contact.phone ? `<p>${contact.phone}</p>` : ''}
+                            </div>
+                        </div>
+                        <div class="contact-actions">
+                            <button type="button" class="contact-btn" onclick="selectContact('${contact.email.replace(/'/g, "\\'")}', '${contact.name.replace(/'/g, "\\'")}'); switchTab('send');" title="Enviar dinero">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                            <button type="button" class="contact-btn delete" onclick="deleteContact(${index})" title="Eliminar">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function selectContact(email, name) {
+            document.getElementById('recipient').value = email;
+            switchTab('send');
+            document.getElementById('recipient').focus();
+        }
+
+        function addNewContact() {
+            const name = document.getElementById('newContactName').value.trim();
+            const email = document.getElementById('newContactEmail').value.trim();
+            const phone = document.getElementById('newContactPhone').value.trim();
+
+            if (!name || !email) {
+                showAlert('Por favor completa nombre y email', 'error');
+                return;
+            }
+
+            // Validar email único
+            const contacts = getContacts();
+            if (contacts.some(c => c.email === email)) {
+                showAlert('Este email ya existe en tus contactos', 'error');
+                return;
+            }
+
+            // Agregar nuevo contacto
+            contacts.push({
+                name: name,
+                email: email,
+                phone: phone || ''
+            });
+
+            saveContacts(contacts);
+            loadContacts();
+            updateContactCount();
+
+            // Limpiar formulario y mostrar mensaje de éxito
+            document.getElementById('addContactForm').reset();
+            document.getElementById('successMessage').classList.add('show');
+
+            setTimeout(() => {
+                document.getElementById('successMessage').classList.remove('show');
+            }, 3000);
+        }
+
+        function deleteContact(index) {
+            if (confirm('¿Estás seguro de que deseas eliminar este contacto?')) {
+                const contacts = getContacts();
+                contacts.splice(index, 1);
+                saveContacts(contacts);
+                loadContacts();
+                updateContactCount();
+                showAlert('Contacto eliminado correctamente', 'success');
+            }
+        }
+
+        function updateContactCount() {
+            const contacts = getContacts();
+            document.getElementById('contactCount').textContent = contacts.length;
+        }
+
+        function processSend() {
+            const recipient = document.getElementById('recipient').value.trim();
+            const amount = parseFloat(document.getElementById('amount').value);
+            const description = document.getElementById('description').value || 'Transferencia';
+
+            if (!recipient || !amount || amount <= 0) {
+                showAlert('Por favor completa todos los campos correctamente', 'error');
+                return;
+            }
+
+            // Validar saldo suficiente
+            let currentBalance = parseFloat(localStorage.getItem('userBalance')) || 0;
+            if (amount > currentBalance) {
+                showAlert('Saldo insuficiente para realizar esta transferencia', 'error');
+                return;
+            }
+
+            // Restar del balance
+            currentBalance -= amount;
+            localStorage.setItem('userBalance', currentBalance.toFixed(2));
+
+            // Guardar transacción
+            let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+            transactions.push({
+                type: 'expense',
+                recipient: recipient,
+                amount: amount.toFixed(2),
+                description: description,
+                date: new Date().toISOString()
+            });
+            localStorage.setItem('transactions', JSON.stringify(transactions));
+
+            showAlert(`✅ Transferencia de $${amount.toFixed(2)} a ${recipient} realizada exitosamente`, 'success');
+
+            // Actualizar balance
+            document.getElementById('balanceAmount').textContent = currentBalance.toFixed(2);
+
+            // Limpiar formulario
+            document.getElementById('recipient').value = '';
+            document.getElementById('amount').value = '';
+            document.getElementById('description').value = '';
+
+            // Redirigir después de 1.5 segundos
+            setTimeout(() => {
+                window.location.href = 'menu.html';
+            }, 1500);
+        }
+
+        function switchTab(tabName) {
+            // Ocultar todos los tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Desactivar todos los botones
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Mostrar tab seleccionado
+            document.getElementById(tabName).classList.add('active');
+
+            // Activar botón seleccionado
+            event.target.closest('.tab-btn').classList.add('active');
+        }
+
+        function checkLogin() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            if (!isLoggedIn || isLoggedIn !== 'true') {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            const userName = localStorage.getItem('userName') || 'Usuario';
+            document.getElementById('navUserName').textContent = userName;
+            document.getElementById('navUserAvatar').textContent = userName.charAt(0).toUpperCase();
+        }
+
+        function loadBalance() {
+            const balance = localStorage.getItem('userBalance') || '0.00';
+            document.getElementById('balanceAmount').textContent = parseFloat(balance).toFixed(2);
+        }
+
+        function showAlert(message, type) {
+            const alertDiv = document.getElementById('alertMessage');
+            alertDiv.textContent = message;
+            alertDiv.className = `alert-custom show ${type}`;
+
+            setTimeout(() => {
+                alertDiv.classList.remove('show');
+            }, 4000);
+        }
+
+        function logout() {
+            if (confirm('¿Deseas cerrar sesión?')) {
+                localStorage.removeItem('isLoggedIn');
+                window.location.href = 'index.html';
+            }
+        }
+    </script>
+</body>
+</html>
